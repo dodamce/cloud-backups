@@ -13,7 +13,7 @@ int main(int argc, char const *argv[])
         return 1;
     }
     string infile = argv[1];
-    string outfile = argv[2];
+    string outfile = argv[2]; 
     ifstream inf;
     inf.open(infile, std::ios::binary);
     inf.seekg(0, std::ios::end);
