@@ -5,7 +5,9 @@ Json:
 .PHONY:Bundle
 Bundle:
 	g++ -o TestBundle bundle_example.cpp ../bundle/bundle.cpp  -std=c++11 -lpthread
+	mkdir test-bundle-zip
+	./TestBundle TestBundle ./test-bundle-zip/TestBundle.lz
 
 .PHONY:clean
 clean:
-	rm -rf TestJson TestBundle 
+	rm -rf TestJson TestBundle test-bundle-zip/
