@@ -1,6 +1,7 @@
 .PHONY:Json
 Json:
 	g++ -o TestJson json_example.cpp -ljsoncpp -std=c++11
+	./TestJson
 	mv TestJson ./test-exe
 
 .PHONY:Bundle-Zip
@@ -14,7 +15,7 @@ Bundle-Zip:
 Bundle-UnZip:
 	g++ -o TestBundleUnZip bundle_example_unzip.cpp ../bundle/bundle.cpp -std=c++11 -lpthread
 	mkdir test-bundle-unzip
-	./TestBundleUnZip ./test-bundle-zip/TestBundle.lz ./test-bundle-unzip/TestBundle
+	./TestBundleUnZip ./test-bundle-zip/TestBundleZip.lz ./test-bundle-unzip/TestBundleZip
 	mv TestBundleUnZip ./test-exe
 
 .PHONY:clean
