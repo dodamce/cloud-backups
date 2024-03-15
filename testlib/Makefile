@@ -20,4 +20,4 @@ Bundle-UnZip:
 
 .PHONY:clean
 clean:
-	rm -rf test-bundle-zip/ test-bundle-unzip/ test-exe/
+	rm -rf test-bundle-zip/ test-bundle-unzip/ ./test-exe/*
