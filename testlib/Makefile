@@ -24,6 +24,8 @@ Http:
 	mkdir test-http-server
 	g++ -o HttpServer http_sever_example.cpp -lpthread -std=c++11
 	mv HttpServer ./test-http-server/
+	g++ -o HttpClient http_client_example.cpp -lpthread -std=c++11
+	mv HttpClient ./test-http-server/
 
 .PHONY:clean
 clean:
