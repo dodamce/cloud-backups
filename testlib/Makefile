@@ -4,10 +4,10 @@ Json:
 
 .PHONY:Bundle-Zip
 Bundle:
-	g++ -o TestBundle bundle_example.cpp ../bundle/bundle.cpp  -std=c++11 -lpthread
+	g++ -o TestBundleZip bundle_example_zip.cpp ../bundle/bundle.cpp  -std=c++11 -lpthread
 	mkdir test-bundle-zip
 	./TestBundle TestBundle ./test-bundle-zip/TestBundle.lz
 
 .PHONY:clean
 clean:
-	rm -rf TestJson TestBundle test-bundle-zip/
+	rm -rf TestJson TestBundleZip test-bundle-zip/
