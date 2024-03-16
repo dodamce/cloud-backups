@@ -3,7 +3,7 @@ rm -rf output
 rm -rf util_test
 mkdir output
 mkdir util_test
-g++ -o cloud_backups_test cloud_backups_test.cpp ./bundle/bundle.cpp -lpthread -std=c++11
+g++ -o cloud_backups_test cloud_backups_test.cpp ./bundle/bundle.cpp -lpthread -lstdc++fs
 mv cloud_backups_test util_test/
 ./util_test/cloud_backups_test ./cloud_backups_test.cpp
 mv cloud_backups_test.cpp.lz util_test/

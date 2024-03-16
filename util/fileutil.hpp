@@ -6,8 +6,11 @@
 #include <sys/stat.h>
 #include "log.hpp"
 #include "../bundle/bundle.h"
+// #include <filesystem>
+#include <experimental/filesystem>
 namespace CloudBackups
 {
+    namespace fs = std::experimental::filesystem;
     class FileUtil
     {
     private:
@@ -54,6 +57,7 @@ namespace CloudBackups
             {
                 LOG(ERROR, "open file failed!");
                 return false;
+                
             }
             ifs.seekg(pos, std::ios::beg);
             body.resize(len);
@@ -132,6 +136,27 @@ namespace CloudBackups
             { // 保存解压数据失败
                 LOG(ERROR, "save unzip file content failed!");
                 return false;
+            }
+            return true;
+        }
+        bool isExit() { return fs::exists(_filepath); } // 判断文件是否存在
+        bool mkdir()                                    // 创建文件夹
+        {
+            if (this->isExit())
+            {
+                return true;
+            }
+            return fs::create_directories(_filepath);
+        }
+        bool ls(std::vector<std::string> &files) // 扫描文件夹,并返回里面的文件
+        {
+            for (auto &pos : fs::directory_iterator(_filepath))
+            {
+                if (fs::is_directory(pos) == true)
+                {
+                    continue; // 目录不出来
+                }
+                files.push_back(fs::path(pos).relative_path().string()); // 获取文件的相对路径
             }
             return true;
         }

@@ -1,4 +1,5 @@
 #include "util/fileutil.hpp"
+#include <vector>
 
 void FileUtilTest(const std::string &filepath) // 文件工具类测试
 {
@@ -24,6 +25,15 @@ void FileUtilTest(const std::string &filepath) // 文件工具类测试
     CloudBackups::FileUtil unzipfile(zipname); // 传入要解压的文件
     std::string unzipname = filepath + ".unzip.txt";
     unzipfile.unzip(unzipname); // 传入解压完后的文件
+    // 测试创建文件夹
+    CloudBackups::FileUtil fileCreate("./util_test/test_dir");
+    fileCreate.mkdir();
+    std::vector<std::string> buff;
+    fileCreate.ls(buff);
+    for (auto &it : buff)
+    {
+        LOG(INFO, it);
+    }
 }
 
 int main(int argc, char const *argv[])
