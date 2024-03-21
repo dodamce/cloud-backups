@@ -29,6 +29,6 @@ void Log(std::string level, std::string msg, std::string file_name, int line)
     std::cout << "[" << level << "]"
               << "[" << convertTimeStamp2TimeStr(time(nullptr)) << "]"
               << "[" << msg << "]"
-              << "[" << file_name << "]"
+              << "[" << file_name << "]" 
               << "[" << line << "]" << std::endl;
 }
