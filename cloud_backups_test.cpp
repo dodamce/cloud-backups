@@ -1,6 +1,7 @@
 // #include "util/fileutil.hpp"
 #include <vector>
 #include "util/json.hpp"
+#include "config/config.hpp"
 // void FileUtilTest(const std::string &filepath) // 文件工具类测试
 // {
 //     CloudBackups::FileUtil file(filepath);
@@ -58,9 +59,23 @@ void JsonUtilTest()
     }
 }
 
+void ConfigTest()
+{
+    CloudBackups::Config *conf = CloudBackups::Config::GetInstance();
+    std::cout << conf->GetHotTime() << std::endl;
+    std::cout << conf->GetServerIp() << std::endl;
+    std::cout << conf->GetServerPort() << std::endl;
+    std::cout << conf->GetBackDir() << std::endl;
+    std::cout << conf->GetBackupFile() << std::endl;
+    std::cout << conf->GetDownloadPrefix() << std::endl;
+    std::cout << conf->GetPackfileDir() << std::endl;
+    std::cout << conf->GetPackfileSuffix() << std::endl;
+}
+
 int main(int argc, char const *argv[])
 {
     // FileUtilTest(argv[1]);
-    JsonUtilTest();
+    // JsonUtilTest();
+    ConfigTest();
     return 0;
 }

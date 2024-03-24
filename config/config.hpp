@@ -2,7 +2,7 @@
 #include "../util/json.hpp"
 #include "../util/fileutil.hpp"
 #include <mutex>
-#define CONFIG_FILE "./cloud_backups.conf"
+#define CONFIG_FILE "/root/Cpp/cloud-backups/config/cloud_backups.conf"
 namespace CloudBackups
 {
     class Config
