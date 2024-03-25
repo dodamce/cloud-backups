@@ -15,6 +15,7 @@ namespace CloudBackups
         std::string pack_path; // 文件压缩存储位置
         std::string url;
         // 打开文件初始化BackInfo
+        BackupInfo() {}
         BackupInfo(const std::string &real_path)
         {
             this->packflag = false;
