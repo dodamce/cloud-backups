@@ -40,4 +40,81 @@ namespace CloudBackups
             }
         }
     };
+    class DataMange
+    {
+    private:
+        pthread_rwlock_t rwlock;                               // 读写锁，读共享，写互斥
+        std::unordered_map<std::string, BackupInfo> backupMap; // 文件请求路径和对应信息的哈希表
+        std::string backupFile;                                // 数据持久化信息文件，文件格式为json
+    public:
+        DataMange()
+        {
+            backupFile = Config::GetInstance()->GetBackupFile();
+            pthread_rwlock_init(&rwlock, nullptr);
+        }
+        ~DataMange()
+        {
+            pthread_rwlock_destroy(&rwlock);
+        }
+        // 数据管理模块插入信息
+        bool Insert(const BackupInfo &backupInfo)
+        {
+            pthread_rwlock_wrlock(&rwlock);
+            backupMap[backupInfo.url] = backupInfo;
+            pthread_rwlock_unlock(&rwlock);
+            return true;
+        }
+        // 更新数据管理模块
+        bool UpDate(const BackupInfo &backupInfo)
+        {
+            pthread_rwlock_wrlock(&rwlock);
+            backupMap[backupInfo.url] = backupInfo;
+            pthread_rwlock_unlock(&rwlock);
+            return true;
+        }
+        // 通过url获取这个文件
+        bool GetByUrl(const std::string &url, BackupInfo &backupInfo)
+        {
+            pthread_rwlock_wrlock(&rwlock);
+            auto pos = backupMap.find(url);
+            if (pos == backupMap.end())
+            {
+                pthread_rwlock_unlock(&rwlock);
+                return false;
+            }
+            backupInfo = pos->second;
+            pthread_rwlock_unlock(&rwlock);
+            return true;
+        }
+        // 通过http url 获取文件信息
+        bool GetByRealPath(const std::string &real_url, BackupInfo &backupInfo)
+        {
+            pthread_rwlock_wrlock(&rwlock);
+            auto pos = backupMap.begin();
+            while (pos != backupMap.end())
+            {
+                if (pos->second.real_path == real_url)
+                {
+                    backupInfo = pos->second;
+                    pthread_rwlock_unlock(&rwlock);
+                    return true;
+                }
+                pos++;
+            }
+            pthread_rwlock_unlock(&rwlock);
+            return false;
+        }
+        // 获取请求映射下所有文件信息
+        bool GetAll(std::vector<BackupInfo> &backups)
+        {
+            pthread_rwlock_wrlock(&rwlock);
+            backups.clear();
+            for (auto &backup : backupMap)
+            {
+                backups.push_back(backup.second);
+            }
+            pthread_rwlock_unlock(&rwlock);
+            return true;
+        }
+    };
 }
