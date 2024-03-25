@@ -80,6 +80,7 @@ namespace CloudBackups
             auto pos = backupMap.find(url);
             if (pos == backupMap.end())
             {
+                LOG(WARNING, "url map not found you url is: " + url);
                 pthread_rwlock_unlock(&rwlock);
                 return false;
             }
@@ -87,7 +88,7 @@ namespace CloudBackups
             pthread_rwlock_unlock(&rwlock);
             return true;
         }
-        // 通过http url 获取文件信息
+        // 通过http uri 获取文件信息
         bool GetByRealPath(const std::string &real_url, BackupInfo &backupInfo)
         {
             pthread_rwlock_wrlock(&rwlock);
@@ -102,6 +103,7 @@ namespace CloudBackups
                 }
                 pos++;
             }
+            LOG(WARNING, "http uti not found you uri is: " + real_url);
             pthread_rwlock_unlock(&rwlock);
             return false;
         }
