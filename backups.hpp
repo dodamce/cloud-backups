@@ -34,6 +34,10 @@ namespace CloudBackups
                 std::string download = config->GetDownloadPrefix();
                 this->url = download + "/" + file.filename(); // 下载请求路径
             }
+            else
+            {
+                LOG(FATAL, "file not found");
+            }
         }
     };
 }
