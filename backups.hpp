@@ -19,18 +19,21 @@ namespace CloudBackups
         {
             this->packflag = false;
             FileUtil file(real_path);
-            this->size = file.filesize();
-            this->mtime = file.last_modify_time();
-            this->atime = file.last_visit_time();
-            this->real_path = real_path;
-            // 获取配置文件的压缩文件路径
-            Config *config = Config::GetInstance();
-            std::string packdir = config->GetPackfileDir();   // 压缩文件根目录
-            std::string suffix = config->GetPackfileSuffix(); // 压缩文件后缀
-            std::string zipname = file.filename() + suffix;
-            this->pack_path = packdir + "/" + zipname; // 压缩文件路径
-            std::string download = config->GetDownloadPrefix();
-            this->url = download + "/" + file.filename(); // 下载请求路径
+            if (file.isExit()) // 文件存在时才可以获取下面的信息
+            {
+                this->size = file.filesize();
+                this->mtime = file.last_modify_time();
+                this->atime = file.last_visit_time();
+                this->real_path = real_path;
+                // 获取配置文件的压缩文件路径
+                Config *config = Config::GetInstance();
+                std::string packdir = config->GetPackfileDir();   // 压缩文件根目录
+                std::string suffix = config->GetPackfileSuffix(); // 压缩文件后缀
+                std::string zipname = file.filename() + suffix;
+                this->pack_path = packdir + "/" + zipname; // 压缩文件路径
+                std::string download = config->GetDownloadPrefix();
+                this->url = download + "/" + file.filename(); // 下载请求路径
+            }
         }
     };
 }
