@@ -3,6 +3,7 @@
 #include <unordered_map>
 #include <pthread.h>
 #include "./config/config.hpp"
+#include "./util/json.hpp"
 namespace CloudBackups
 {
     struct BackupInfo
@@ -48,6 +49,35 @@ namespace CloudBackups
         std::unordered_map<std::string, BackupInfo> backupMap; // 文件请求路径和对应信息的哈希表
         std::string backupFile;                                // 数据持久化信息文件，文件格式为json
     public:
+        // 将backupMap持久化存储
+        bool Storage()
+        {
+            // 获取所有数据
+            std::vector<BackupInfo> backups;
+            this->GetAll(backups);
+            // 添加到Json::Value中
+            Json::Value root;
+            for (size_t i = 0; i < backups.size(); i++)
+            {
+                Json::Value backup;
+                backup["packflag"] = backups[i].packflag;
+                backup["size"] = Json::Int64(backups[i].size);
+                backup["mtime"] = Json::Int64(backups[i].mtime);
+                backup["atime"] = Json::Int64(backups[i].atime);
+                backup["real_path"] = backups[i].real_path;
+                backup["pack_path"] = backups[i].pack_path;
+                backup["url"] = backups[i].url;
+                root.append(backup);
+            }
+            // 持久化 序列化+保存
+            //  序列化
+            std::string body;
+            JsonUtil::serialize(root, body);
+            // 保存文件
+            FileUtil file(backupFile);
+            file.setContent(body);
+            return true;
+        }
         DataMange()
         {
             backupFile = Config::GetInstance()->GetBackupFile();
@@ -63,6 +93,7 @@ namespace CloudBackups
             pthread_rwlock_wrlock(&rwlock);
             backupMap[backupInfo.url] = backupInfo;
             pthread_rwlock_unlock(&rwlock);
+            Storage();
             return true;
         }
         // 更新数据管理模块
@@ -71,6 +102,7 @@ namespace CloudBackups
             pthread_rwlock_wrlock(&rwlock);
             backupMap[backupInfo.url] = backupInfo;
             pthread_rwlock_unlock(&rwlock);
+            Storage();
             return true;
         }
         // 通过url获取这个文件

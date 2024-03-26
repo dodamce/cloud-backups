@@ -1,0 +1,11 @@
+[
+	{
+		"atime" : 1711383928,
+		"mtime" : 1711383928,
+		"pack_path" : "./packdir/build.sh.lz",
+		"packflag" : true,
+		"real_path" : "./build.sh",
+		"size" : 347,
+		"url" : "./download/build.sh"
+	}
+]
