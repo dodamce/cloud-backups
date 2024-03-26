@@ -3,6 +3,7 @@
 #include "util/json.hpp"
 #include "config/config.hpp"
 #include "backups.hpp"
+#include "hot.hpp"
 void FileUtilTest(const std::string &filepath) // 文件工具类测试
 {
     CloudBackups::FileUtil file(filepath);
@@ -127,12 +128,20 @@ void BackupInfoUnitTest()
         std::cout << it.url << std::endl;
     }
 }
+CloudBackups::DataMange *dataMange;
+void HotUnitTest()
+{
+    dataMange = new CloudBackups::DataMange();
+    CloudBackups::HotMange hot;
+    hot.RunModule();
+}
 
 int main(int argc, char const *argv[])
 {
     // FileUtilTest(argv[1]);
     // JsonUtilTest();
     // ConfigTest();
-    BackupInfoUnitTest();
+    // BackupInfoUnitTest();
+    HotUnitTest();
     return 0;
 }
