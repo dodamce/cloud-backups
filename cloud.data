@@ -1,29 +1,20 @@
 [
 	{
-		"atime" : 1711472678,
-		"mtime" : 1711472678,
+		"atime" : 1711472777,
+		"mtime" : 1711476114,
 		"pack_path" : "./packdir/test.html.lz",
 		"packflag" : false,
 		"real_path" : "./backdir/test.html",
 		"size" : 192,
-		"url" : "./download/test.html"
+		"url" : "/download/test.html"
 	},
 	{
-		"atime" : 1711470372,
-		"mtime" : 1711470471,
+		"atime" : 1711470474,
+		"mtime" : 1711475868,
 		"pack_path" : "./packdir/HelloWorld.txt.lz",
 		"packflag" : false,
 		"real_path" : "./backdir/HelloWorld.txt",
 		"size" : 10,
-		"url" : "./download/HelloWorld.txt"
-	},
-	{
-		"atime" : 1711470487,
-		"mtime" : 1711470487,
-		"pack_path" : "./packdir/upload.html.lz",
-		"packflag" : false,
-		"real_path" : "./backdir/upload.html",
-		"size" : 481,
-		"url" : "./download/upload.html"
+		"url" : "/download/HelloWorld.txt"
 	}
 ]

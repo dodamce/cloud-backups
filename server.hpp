@@ -15,7 +15,7 @@ namespace CloudBackups
         // 上传文件
         static void Upload(const httplib::Request &request, httplib::Response &response)
         {
-            LOG(INFO, "upload begin");
+            // LOG(INFO, "upload begin");
             // POST请求，文件数据在http正文中，分区存储
             bool ret = request.has_file("file"); // 判断有无上传文件字段
             if (ret == false)
@@ -39,7 +39,7 @@ namespace CloudBackups
         // 展示页面
         static void ListShow(const httplib::Request &request, httplib::Response &response)
         {
-            LOG(INFO, "list show begin");
+            // LOG(INFO, "list show begin");
             // 获取所有文件信息
             std::vector<BackupInfo> array;
             dataMange->GetAll(array);
@@ -61,9 +61,49 @@ namespace CloudBackups
             response.status = 200;
             LOG(INFO, "list show end");
         }
+        // ETag为设计者自行指定 ETags：文件名称-文件大小-最后修改时间 构成
+        static std::string GetETag(BackupInfo info)
+        {
+            std::string etag = FileUtil(info.real_path).filename();
+            etag += "-";
+            etag += std::to_string(info.size);
+            etag += "-";
+            etag += std::to_string(info.mtime);
+            return etag;
+        }
         // 下载文件
         static void Download(const httplib::Request &request, httplib::Response &response)
         {
+            // 1. 获取客户端请求资源的路径 request.path
+            // 2. 根据路径获取文件备份信息
+            BackupInfo info;
+            if (dataMange->GetByUrl(request.path, info) == false)
+            {
+                LOG(WARNING, "file /download not found");
+                response.status = 404;
+                return;
+            }
+            // 3. 判断文件是否被压缩,被压缩的话需要先解压缩，删除压缩包，修改备份信息
+            if (info.packflag == true)
+            {
+                // 被压缩,解压到backdir目录浏览
+                FileUtil tool(info.pack_path);
+                tool.unzip(info.real_path);
+                // 删除压缩包
+                tool.removeFile();
+                info.packflag = false;
+                // 修改配置文件
+                dataMange->UpDate(info);
+            }
+            // 4. 读取文件数据放入body中
+            FileUtil tool(info.real_path);
+            tool.getContent(response.body);
+            // 5. 设置响应头部字段ETag Accept-Range字段
+            response.set_header("ETag", GetETag(info));
+            response.set_header("Accept-Ranges", "bytes");
+            response.set_header("Content-Type", "application/octet-stream");
+            response.status = 200;
+            LOG(INFO, "download success");
         }
 
     public:
@@ -83,6 +123,7 @@ namespace CloudBackups
             server.Get("/list", ListShow);  // 展示页面
             server.Get("/", ListShow);      // 网页根目录也是展示页面
             std::string download_url = download_prefix + "(.*)";
+            // LOG(INFO, "DEBUG:" + download_url);
             server.Get(download_url, Download); // 下载文件,正则表达式捕捉要下载的文件
             if (server.listen(ip, port) == false)
             {
