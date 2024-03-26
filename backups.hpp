@@ -4,6 +4,7 @@
 #include <pthread.h>
 #include "./config/config.hpp"
 #include "./util/json.hpp"
+// 服务器数据管理模块设计
 namespace CloudBackups
 {
     struct BackupInfo
