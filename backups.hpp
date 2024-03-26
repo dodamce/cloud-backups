@@ -18,7 +18,7 @@ namespace CloudBackups
         std::string url;
         // 打开文件初始化BackInfo
         BackupInfo() {}
-        BackupInfo(const std::string &real_path)
+        bool InitBackupInfo(const std::string &real_path)
         {
             this->packflag = false;
             FileUtil file(real_path);
@@ -36,11 +36,17 @@ namespace CloudBackups
                 this->pack_path = packdir + "/" + zipname; // 压缩文件路径
                 std::string download = config->GetDownloadPrefix();
                 this->url = download + "/" + file.filename(); // 下载请求路径
+                return true;
             }
             else
             {
                 LOG(FATAL, "file not found");
+                return false;
             }
+        }
+        BackupInfo(const std::string &real_path)
+        {
+            InitBackupInfo(real_path);
         }
     };
     class DataMange
