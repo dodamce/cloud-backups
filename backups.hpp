@@ -33,9 +33,9 @@ namespace CloudBackups
                 std::string packdir = config->GetPackfileDir();   // 压缩文件根目录
                 std::string suffix = config->GetPackfileSuffix(); // 压缩文件后缀
                 std::string zipname = file.filename() + suffix;
-                this->pack_path = packdir + "/" + zipname; // 压缩文件路径
+                this->pack_path = packdir + zipname; // 压缩文件路径
                 std::string download = config->GetDownloadPrefix();
-                this->url = download + "/" + file.filename(); // 下载请求路径
+                this->url = download + file.filename(); // 下载请求路径
                 return true;
             }
             else
