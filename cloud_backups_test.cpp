@@ -4,6 +4,7 @@
 #include "config/config.hpp"
 #include "backups.hpp"
 #include "hot.hpp"
+#include "server.hpp"
 void FileUtilTest(const std::string &filepath) // 文件工具类测试
 {
     CloudBackups::FileUtil file(filepath);
@@ -135,13 +136,18 @@ void HotUnitTest()
     CloudBackups::HotMange hot;
     hot.RunModule();
 }
-
+void ServerUtilTest()
+{
+    CloudBackups::Server server;
+    server.RunMoudle();
+}
 int main(int argc, char const *argv[])
 {
     // FileUtilTest(argv[1]);
     // JsonUtilTest();
     // ConfigTest();
     // BackupInfoUnitTest();
-    HotUnitTest();
+    // HotUnitTest();
+    ServerUtilTest();
     return 0;
 }
