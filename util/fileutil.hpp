@@ -29,7 +29,23 @@ namespace CloudBackups
         int64_t filesize() { return st.st_size; }         // 获取文件大小，失败返回-1
         time_t last_modify_time() { return st.st_mtime; } // 获取文件最后修改时间
         time_t last_visit_time() { return st.st_atime; }  // 获取文件最后访问时间
-        std::string filename()                            // 文件名称
+        // 删除文件
+        bool removeFile()
+        {
+            if (this->isExit() == false)
+            {
+                return false;
+            }
+            if (remove(_filepath.c_str()) == 0)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+        std::string filename() // 文件名称
         {
             size_t pos = _filepath.find_last_of("/");
             if (pos == std::string::npos)
@@ -57,7 +73,6 @@ namespace CloudBackups
             {
                 LOG(ERROR, "open file failed!");
                 return false;
-                
             }
             ifs.seekg(pos, std::ios::beg);
             body.resize(len);
