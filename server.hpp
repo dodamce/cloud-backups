@@ -39,6 +39,27 @@ namespace CloudBackups
         // 展示页面
         static void ListShow(const httplib::Request &request, httplib::Response &response)
         {
+            LOG(INFO, "list show begin");
+            // 获取所有文件信息
+            std::vector<BackupInfo> array;
+            dataMange->GetAll(array);
+            // 根据所有文件信息构建http响应
+            std::stringstream ss;
+            ss << R"(<!DOCTYPE html><html lang="cn"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>download list</title></head><body>)";
+            ss << R"(<h1 align="center">Download List</h1>)";
+            for (auto &info : array)
+            {
+                std::string filename = FileUtil(info.real_path).filename();
+                ss << R"(<tr><td><a href=")" << info.url << R"(">)" << filename << "</a></td>";
+                ss << R"(<td align="right"> )" << convertTimeStamp2TimeStr(info.mtime) << "  </td>";
+                ss << R"(<td align="right">)" << info.size / 1024 << "Kb</td></tr>";
+                ss << "<br>";
+            }
+            ss << "</body></html>";
+            response.body = ss.str();
+            response.set_header("Content-Type", "text/html");
+            response.status = 200;
+            LOG(INFO, "list show end");
         }
         // 下载文件
         static void Download(const httplib::Request &request, httplib::Response &response)
