@@ -78,10 +78,44 @@ namespace CloudBackups
             file.setContent(body);
             return true;
         }
+        // 加载配置信息，初始化backupMap
+        bool InitLoad()
+        {
+            // 读取Json文件
+            FileUtil file(backupFile);
+            if (file.isExit() == false)
+            {
+                // 服务器文件信息不存在，无需初始化
+                return true;
+            }
+            std::string body;
+            file.getContent(body);
+            // 反序列化
+            Json::Value root;
+            if (JsonUtil::unserialize(body, root) == true)
+            {
+                // 将反序列化的数据写到map上
+                for (int i = 0; i < root.size(); i++)
+                {
+                    BackupInfo backupInfo;
+                    backupInfo.packflag = root[i]["packflag"].asBool();
+                    backupInfo.size = root[i]["size"].asInt64();
+                    backupInfo.mtime = root[i]["mtime"].asInt64();
+                    backupInfo.atime = root[i]["atime"].asInt64();
+                    backupInfo.real_path = root[i]["real_path"].asString();
+                    backupInfo.pack_path = root[i]["pack_path"].asString();
+                    backupInfo.url = root[i]["url"].asString();
+                    Insert(backupInfo);
+                }
+                return true;
+            }
+            return false;
+        }
         DataMange()
         {
             backupFile = Config::GetInstance()->GetBackupFile();
             pthread_rwlock_init(&rwlock, nullptr);
+            InitLoad();
         }
         ~DataMange()
         {

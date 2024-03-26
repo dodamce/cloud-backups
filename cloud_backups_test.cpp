@@ -75,30 +75,45 @@ void ConfigTest()
 
 void BackupInfoUnitTest()
 {
-    CloudBackups::BackupInfo backup("./build.sh");
-    std::cout << backup.packflag << std::endl;
-    std::cout << backup.mtime << std::endl;
-    std::cout << backup.atime << std::endl;
-    std::cout << backup.size << std::endl;
-    std::cout << backup.pack_path << std::endl;
-    std::cout << backup.real_path << std::endl;
-    std::cout << backup.url << std::endl;
-    std::cout << "DataMange Test Begin" << std::endl;
-    CloudBackups::DataMange dataMange;
-    dataMange.Insert(backup);
-    CloudBackups::BackupInfo info;
-    dataMange.GetByUrl("./download/build.sh", info);
-    std::cout << info.packflag << std::endl;
-    std::cout << info.mtime << std::endl;
-    std::cout << info.atime << std::endl;
-    std::cout << info.size << std::endl;
-    std::cout << info.pack_path << std::endl;
-    std::cout << info.real_path << std::endl;
-    std::cout << info.url << std::endl;
+    //     CloudBackups::BackupInfo backup("./build.sh");
+    //     std::cout << backup.packflag << std::endl;
+    //     std::cout << backup.mtime << std::endl;
+    //     std::cout << backup.atime << std::endl;
+    //     std::cout << backup.size << std::endl;
+    //     std::cout << backup.pack_path << std::endl;
+    //     std::cout << backup.real_path << std::endl;
+    //     std::cout << backup.url << std::endl;
+    //     std::cout << "DataMange Test Begin" << std::endl;
+    //     CloudBackups::DataMange dataMange;
+    //     dataMange.Insert(backup);
+    //     CloudBackups::BackupInfo info;
+    //     dataMange.GetByUrl("./download/build.sh", info);
+    //     std::cout << info.packflag << std::endl;
+    //     std::cout << info.mtime << std::endl;
+    //     std::cout << info.atime << std::endl;
+    //     std::cout << info.size << std::endl;
+    //     std::cout << info.pack_path << std::endl;
+    //     std::cout << info.real_path << std::endl;
+    //     std::cout << info.url << std::endl;
 
-    info.packflag = true;
-    dataMange.UpDate(info);
-    std::cout << "===============" << std::endl;
+    //     info.packflag = true;
+    //     dataMange.UpDate(info);
+    //     std::cout << "===============" << std::endl;
+    //     std::vector<CloudBackups::BackupInfo> buff;
+    //     dataMange.GetAll(buff);
+    //     for (auto &it : buff)
+    //     {
+    //         std::cout << it.packflag << std::endl;
+    //         std::cout << it.mtime << std::endl;
+    //         std::cout << it.atime << std::endl;
+    //         std::cout << it.size << std::endl;
+    //         std::cout << it.pack_path << std::endl;
+    //         std::cout << it.real_path << std::endl;
+    //         std::cout << it.url << std::endl;
+    //     }
+    //     std::cout << "DataMange Test End" << std::endl;
+    // 测试初始化Load函数
+    CloudBackups::DataMange dataMange;
     std::vector<CloudBackups::BackupInfo> buff;
     dataMange.GetAll(buff);
     for (auto &it : buff)
@@ -111,7 +126,6 @@ void BackupInfoUnitTest()
         std::cout << it.real_path << std::endl;
         std::cout << it.url << std::endl;
     }
-    std::cout << "DataMange Test End" << std::endl;
 }
 
 int main(int argc, char const *argv[])
