@@ -139,6 +139,7 @@ void HotUnitTest()
 void ServerUtilTest()
 {
     CloudBackups::Server server;
+    dataMange = new CloudBackups::DataMange();
     server.RunMoudle();
 }
 int main(int argc, char const *argv[])
