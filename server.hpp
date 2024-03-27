@@ -95,14 +95,39 @@ namespace CloudBackups
                 // 修改配置文件
                 dataMange->UpDate(info);
             }
-            // 4. 读取文件数据放入body中
+            //  4. 读取文件数据放入body中
             FileUtil tool(info.real_path);
             tool.getContent(response.body);
-            // 5. 设置响应头部字段ETag Accept-Range字段
-            response.set_header("ETag", GetETag(info));
-            response.set_header("Accept-Ranges", "bytes");
-            response.set_header("Content-Type", "application/octet-stream");
-            response.status = 200;
+            // 判断断点续传
+            bool retrans = false; // 标记断点续传
+            std::string befetag;
+            if (request.has_header("If-Range"))
+            {
+                // 断点续传 服务端在下载时响应ETag字段搭配使用判断文件是否被修改
+                befetag = request.get_header_value("If-Range");
+                if (befetag == GetETag(info))
+                {
+                    // 文件没修改过
+                    retrans = true;
+                }
+            }
+            // 没有If-Range字段或者If-Range字段与ETag不匹配，重新下载
+            if (retrans == false)
+            {
+                // 正常下载
+                //  5. 设置响应头部字段ETag Accept-Range字段
+                response.set_header("ETag", GetETag(info));
+                response.set_header("Accept-Ranges", "bytes");
+                response.set_header("Content-Type", "application/octet-stream");
+                response.status = 200;
+            }
+            else
+            {
+                // 断点续传，了解区间范围
+                response.set_header("ETag", GetETag(info));
+                response.set_header("Accept-Ranges", "bytes");
+                response.status = 206;//cpp-httplib会自动根据请求Range字段对response.body进行切片返回，封装实现
+            }
             LOG(INFO, "download success");
         }
 
